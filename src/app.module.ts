@@ -6,21 +6,29 @@ import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/entities/category.entity';
 import { TransactionsModule } from './transactions/transactions.module';
 import { Transaction } from './transactions/entities/transaction.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'db.tmnuzfepvjtuxvndewwo.supabase.co',
-      port: 5432,
-      username: 'postgres',
-      password: 'Salomon281213*.',
-      database: 'postgres',
-      entities: [Category, Transaction],
-      // synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        entities: [Category, Transaction],
+        // synchronize: true, // Cuidado con esta opción en producción
+      }),
+      inject: [ConfigService],
     }),
     CategoriesModule,
     TransactionsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
