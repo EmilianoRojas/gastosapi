@@ -3,6 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
+import { TransactionsModule } from './transactions/transactions.module';
+import { Transaction } from './transactions/entities/transaction.entity';
 
 @Module({
   imports: [
@@ -11,12 +14,13 @@ import { CategoriesModule } from './categories/categories.module';
       host: 'db.tmnuzfepvjtuxvndewwo.supabase.co',
       port: 5432,
       username: 'postgres',
-      password: 'your_password',
+      password: 'Salomon281213*.',
       database: 'postgres',
-      entities: [/* your entities here */],
-      synchronize: true,
+      entities: [Category, Transaction],
+      // synchronize: true,
     }),
     CategoriesModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
